@@ -57,12 +57,9 @@ if (faculty_name and class_name and class_section and course_code and subject):
             # Read and encode PDF
             with open(file_path, "rb") as f:
                 base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+                pdf_link = f'<a href="data:application/pdf;base64,{base64_pdf}" target="_blank">📄 Open PDF in new tab</a>'
+                st.markdown(pdf_link, unsafe_allow_html=True)
                 st.download_button("Download Report", data=f, file_name="report.pdf",   mime="application/pdf")
-            pdf_display = f"""
-            <embed src="data:application/pdf;base64,{base64_pdf}" width="100%" height="1000" type="application/pdf">
-            """
-            st.markdown(pdf_display, unsafe_allow_html=True)
-
         else:
             st.warning("Please click on 'Generate Report' button to generate report.")
         
