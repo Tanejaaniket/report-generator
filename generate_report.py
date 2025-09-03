@@ -51,7 +51,8 @@ def create_student_report_pdf(teachers_name:str,course_name:str,course_code:str,
   story.append(Paragraph("1. Student scoring above 80%",styles["subheading"]))
   story.append(Spacer(0,20))
 
-  table_data = [["RegNo","Name","Score"],["1","ABC","87%"],["2","DEF","87%"],["3","GHI","87%"],["4","JKL","87%"],["5","XYZ","87%"]]
+  table_data = [df_above80.columns.to_list()] + df_above80.values.tolist()
+
   
   table = create_table(table_data=table_data)
   story.append(table)
@@ -63,7 +64,7 @@ def create_student_report_pdf(teachers_name:str,course_name:str,course_code:str,
   story.append(Paragraph("2. Student scoring between 70%-80%",styles["subheading"]))
   story.append(Spacer(0,20))
 
-  table_data = [["RegNo","Name","Score"],["1","ABC","87%"],["2","DEF","87%"],["3","GHI","87%"],["4","JKL","87%"],["5","XYZ","87%"]]
+  table_data = [df_70to80.columns.to_list()] + df_70to80.values.tolist()
   
   table = create_table(table_data=table_data)
   story.append(table)
@@ -75,7 +76,7 @@ def create_student_report_pdf(teachers_name:str,course_name:str,course_code:str,
   story.append(Paragraph("3. Student scoring below 40%",styles["subheading"]))
   story.append(Spacer(0,20))
 
-  table_data = [["RegNo","Name","Score"],["1","ABC","87%"],["2","DEF","87%"],["3","GHI","87%"],["4","JKL","87%"],["5","XYZ","87%"]]
+  table_data = [df_below40.columns.to_list()] + df_below40.values.tolist()
   
   table = create_table(table_data=table_data)
   story.append(table)
@@ -104,4 +105,4 @@ def create_table(table_data:list)->Table:
   return table
 
 
-create_student_report_pdf(teachers_name="Dr.Abc",course_code="CSE302A",course_name="C Programming",section="B08A",class_name="Btech CSE",df_70to80=pd.DataFrame([]),df_above80=pd.DataFrame([]),df_below40=pd.DataFrame([]))
+# create_student_report_pdf(teachers_name="Dr.Abc",course_code="CSE302A",course_name="C Programming",section="B08A",class_name="Btech CSE",df_70to80=pd.DataFrame([]),df_above80=pd.DataFrame([]),df_below40=pd.DataFrame([]))

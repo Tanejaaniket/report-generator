@@ -36,15 +36,23 @@ import streamlit as st
 
 
 def categorize_students(df):
-
+    df = pd.DataFrame(df)
     df.columns = df.columns.astype(str)
 
     # Calculate percentage (assuming total marks are out of 100)
     df["Percentage"] = (df["total"] / 100) * 100
 
     # Categorize students
-    below_40 = df[df["Percentage"] < 40].head(5)
-    between_70_80 = df[(df["Percentage"] >= 70) & (df["Percentage"] <= 80)].head(5)
-    above_80 = df[df["Percentage"] > 80].head(5)
+    below_40 = df[df["Percentage"] < 40]
+    below_40 = below_40.sort_values("Percentage",ascending=False).head(5)
+    below_40 = below_40[["Name","RegistrationNumber","Percentage"]]
+
+    between_70_80 = df[(df["Percentage"] >= 70) & (df["Percentage"] <= 80)]
+    between_70_80 = between_70_80.sort_values("Percentage",ascending=False).head(5)
+    between_70_80 = between_70_80[["Name","RegistrationNumber","Percentage"]]
+    
+    above_80 = df[df["Percentage"] > 80]
+    above_80 = above_80.sort_values("Percentage",ascending=False).head(5)
+    above_80 = above_80[["Name","RegistrationNumber","Percentage"]]
 
     return below_40, between_70_80, above_80
