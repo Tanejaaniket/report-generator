@@ -9,8 +9,8 @@ import os
 st.set_page_config(page_title="Academic Dashboard", page_icon="🎓", layout="wide")
 st.title('🎓 Academic Dashboard')
 st.markdown("---")
-if os.path.exists("report.pdf"):    
-    os.remove("report.pdf")
+if "report" not in st.session_state:
+    st.session_state.report = None
 
 # --------------- FACULTY DETAILS SECTION ---------------
 with st.container():
@@ -45,21 +45,26 @@ if (faculty_name and class_name and class_section and course_code and subject):
 
             if st.button("Generate report"):
                 (below_40, between_70_80, above_80) = categorize_students(df=df)
-                create_student_report_pdf(teachers_name=faculty_name,course_name=subject,course_code=course_code,class_name=class_name,section=class_section,df_above80=above_80,df_below40=below_40,df_70to80=between_70_80)
-                st.success("Data uploaded successfully!")
+                buffer = create_student_report_pdf(
+                teachers_name=faculty_name,
+                course_name=subject,
+                course_code=course_code,
+                class_name=class_name,
+                section=class_section,
+                df_above80=above_80,
+                df_below40=below_40,
+                df_70to80=between_70_80
+                )
+                st.session_state["report"] = buffer.getvalue()
 
     # --------------- DOWNLOAD SECTION ---------------
     with st.container():
         st.subheader("⬇️ Download Reports")
-
-        file_path = "report.pdf"
-        if os.path.exists(file_path):
-            # Read and encode PDF
-            with open(file_path, "rb") as f:
-                base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-                pdf_link = f'<a href="data:application/pdf;base64,{base64_pdf}" target="_blank">📄 Open PDF in new tab</a>'
-                st.markdown(pdf_link, unsafe_allow_html=True)
-                st.download_button("Download Report", data=f, file_name="report.pdf",   mime="application/pdf")
+        if st.session_state["report"] != None:
+            base64_pdf = base64.b64encode(st.session_state["report"]).decode("utf-8")
+            pdf_link = f'<a href="data:application/pdf;base64,{base64_pdf}" target="_blank">📄 Open PDF in new tab</a>'
+            st.markdown(pdf_link, unsafe_allow_html=True)
+            st.download_button("Download Report", data=st.session_state["report"], file_name="report.pdf",   mime="application/pdf")
         else:
             st.warning("Please click on 'Generate Report' button to generate report.")
         

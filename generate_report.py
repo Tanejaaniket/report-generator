@@ -4,11 +4,15 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_CENTER,TA_JUSTIFY,TA_LEFT
 from reportlab.lib import colors
+import io
+
+
 
 def create_student_report_pdf(teachers_name:str,course_name:str,course_code:str,class_name:str,section:str,df_above80:pd.DataFrame,df_below40:pd.DataFrame,df_70to80:pd.DataFrame) -> None: 
   
   # Empty page
-  doc = SimpleDocTemplate("report.pdf",pageSize=A4)
+  buffer = io.BytesIO()
+  doc = SimpleDocTemplate(buffer,pageSize=A4)
 
   # Font styles margin etc
   styles = getSampleStyleSheet()
@@ -87,7 +91,8 @@ def create_student_report_pdf(teachers_name:str,course_name:str,course_code:str,
 
   # PDF building
   doc.build(story)
-
+  buffer.seek(0)
+  return buffer
 
 def create_table(table_data:list)->Table:
   table = Table(table_data,colWidths=[150,150,150])
